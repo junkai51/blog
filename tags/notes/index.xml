@@ -1,4 +1,57 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Notes on Kai's Blog</title><link>https://junkai51.github.io/blog/tags/notes/</link><description>Recent content in Notes on Kai's Blog</description><generator>Hugo -- 0.155.3</generator><language>en-us</language><lastBuildDate>Tue, 24 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://junkai51.github.io/blog/tags/notes/index.xml" rel="self" type="application/rss+xml"/><item><title>OpenAI Agent SDK 学习笔记</title><link>https://junkai51.github.io/blog/posts/a0014_sdk-notes/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://junkai51.github.io/blog/posts/a0014_sdk-notes/</guid><description>&lt;p&gt;比起其他让人头疼的 OpenAI Developers API Docs，&lt;a href="https://openai.github.io/openai-agents-python/zh/"&gt;OpenAI Agent SDK&lt;/a&gt; 算是比读起来稍微轻松些的，甚至有简体中文。我决定读一读这些内容，虽然这像是词典一样的工具，读起来可能比较枯燥没有逻辑，但我作为一个“不识字”的人，读什么都是学。我将在这里以我自己舒服的方式记录一些我认为重要的内容以及思路梳理。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Notes on Kai's Blog</title><link>https://junkai51.github.io/blog/tags/notes/</link><description>Recent content in Notes on Kai's Blog</description><generator>Hugo -- 0.155.3</generator><language>en-us</language><lastBuildDate>Wed, 23 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://junkai51.github.io/blog/tags/notes/index.xml" rel="self" type="application/rss+xml"/><item><title>编程实现 ResNet 笔记</title><link>https://junkai51.github.io/blog/posts/a0023_resnet-notes/</link><pubDate>Wed, 23 Sep 2026 00:00:00 +0000</pubDate><guid>https://junkai51.github.io/blog/posts/a0023_resnet-notes/</guid><description>&lt;p&gt;我想要从基础开始理解现代的人工智能技术，以便未来从事更深入的科研、项目开发等活动。得到老师的建议，先应该学学 PyTorch 和机器学习，自己搭一个 ResNet 和 Transformer，体会这个过程，理解和亲身经历各种术语描述的情况。&lt;/p&gt;
+&lt;p&gt;那我们就开始吧。&lt;/p&gt;
+&lt;h2 id="基础定义理解"&gt;基础定义理解&lt;/h2&gt;
+&lt;p&gt;机器学习：“输入-输出机“”调旋钮“&lt;/p&gt;
+&lt;p&gt;神经网络：模仿大脑结构的 “输入-输出机“&lt;/p&gt;
+&lt;p&gt;前向传播 forward pass：输入一路向前算出预测值&lt;/p&gt;
+&lt;p&gt;损失计算 loss：衡量“模型错得多离谱”，loss 越小越好，模型训练的目标&lt;/p&gt;
+&lt;p&gt;梯度 gradient：loss 随参数变化的趋势，类比导数&lt;/p&gt;
+&lt;p&gt;反向传播 backpropagation：把 loss 变化倒推回去，得到每个参数对应的梯度&lt;/p&gt;
+&lt;p&gt;一般训练流程：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;输入→前向传播→预测→计算Loss→反向传播→得到梯度→更新参数→再来一次……&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="pytorch"&gt;PyTorch&lt;/h2&gt;
+&lt;p&gt;PyTorch 已经将最复杂的数学部分自动化了，写的代码一般主要是在描述模型长什么样、数据是什么、对错是什么、该用什么方法更新参数。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;tensor&lt;/code&gt; 张量是 PyTorch 库中提供的基本计算单位&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;多维数组&lt;/li&gt;
+&lt;li&gt;可在 GPU 中加速运算&lt;/li&gt;
+&lt;li&gt;自动梯度运算&lt;/li&gt;
+&lt;li&gt;神经网络参与计算的东西基本都是张量
+&lt;ul&gt;
+&lt;li&gt;输入、输出是张量&lt;/li&gt;
+&lt;li&gt;做完卷积、ReLU、BatchNorm 还是张量&lt;/li&gt;
+&lt;li&gt;参数甚至也可能是一种特殊的张量&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;统一容器来对一切（图片/音频/文本/loss/梯度……）进行机器学习运算&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="搭建-resnet-残差网络"&gt;搭建 ResNet 残差网络&lt;/h2&gt;
+&lt;p&gt;ResNet 特点&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;为了解决 CNN 过深效果变差的问题&lt;/li&gt;
+&lt;li&gt;带捷径的 CNN&lt;/li&gt;
+&lt;li&gt;跳跃连接——跳过某些网络层的连接实现恒等映射，再与输出合并&lt;/li&gt;
+&lt;li&gt;让网络中的某些层不用直接学习完整的映射，而只学习“在输入基础上需要修改多少“&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;数学理解&lt;/p&gt;
+&lt;p&gt;假设某一层真正希望实现的映射叫：
+$$
+H(x)
+$$
+普通神经网络会直接让卷积层去学：
+$$
+F(x)\approx H(x)
+$$
+而 ResNet 把输出结构写成：
+$$
+y=x+F(x)
+$$
+训练要得到最终结果 &lt;code&gt;y&lt;/code&gt; ，于是如果理想答案是：
+$$
+y=H(x)
+$$&lt;/p&gt;</description></item><item><title>OpenAI Agent SDK 学习笔记</title><link>https://junkai51.github.io/blog/posts/a0014_sdk-notes/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://junkai51.github.io/blog/posts/a0014_sdk-notes/</guid><description>&lt;p&gt;比起其他让人头疼的 OpenAI Developers API Docs，&lt;a href="https://openai.github.io/openai-agents-python/zh/"&gt;OpenAI Agent SDK&lt;/a&gt; 算是比读起来稍微轻松些的，甚至有简体中文。我决定读一读这些内容，虽然这像是词典一样的工具，读起来可能比较枯燥没有逻辑，但我作为一个“不识字”的人，读什么都是学。我将在这里以我自己舒服的方式记录一些我认为重要的内容以及思路梳理。&lt;/p&gt;
 &lt;h1 id="智能体概览"&gt;智能体概览&lt;/h1&gt;
 &lt;blockquote&gt;
 &lt;p&gt;An agent is a large language model (LLM) configured with instructions, tools, and optional runtime behavior such as handoffs, guardrails, and structured outputs.&lt;/p&gt;

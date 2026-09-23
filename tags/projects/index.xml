@@ -51,37 +51,7 @@
 &lt;h3 id="小修小补以及每次都要卡我一下的git"&gt;小修小补，以及每次都要卡我一下的，Git&lt;/h3&gt;
 &lt;p&gt;当然也还会有点小问题。可能是记录状态的变量串了，导致弃牌也会被当作开边池的条件。我将这个问题返回给它，顺便让它把牌局记录做成可折叠的盒子，不要把页面越拉越长搞得不美观，另外让它少用用 playwright，太败家了，改完测好就同步到远程仓库去。&lt;/p&gt;
 &lt;p&gt;这次偷懒让我有了段奇妙的经历.因为没改到 main branch 上，这次的 commit 需要我再手动融合，然后打开 page 一看，结果竟是修改前和修改后的混合态——有一些明显是刚刚加的功能，但诸如选择赢家等功能却还是旧的方式。&lt;/p&gt;
-&lt;p&gt;codex 冷静解答：&lt;/p&gt;</description></item><item><title>一个人玩 21 点太无聊，我让 AI Agent 给我发牌</title><link>https://junkai51.github.io/blog/posts/a0013_dealer/</link><pubDate>Fri, 20 Mar 2026 00:00:00 +0000</pubDate><guid>https://junkai51.github.io/blog/posts/a0013_dealer/</guid><description>&lt;p&gt;做 Agent 相当容易，我不禁想在许多地方都放个 agent 玩玩。也许看起来没什么意义，但应该挺有意思，反正 tokens 也不花钱。首先就是那个很简陋的 BlackJack 游戏，我希望让 agent 来执行那些方法，让 agent 成为荷官。&lt;/p&gt;
-&lt;h2 id="构建"&gt;构建&lt;/h2&gt;
-&lt;p&gt;这次当然不用手写了，我们在上次 Codex 的项目中继续。&lt;/p&gt;
-&lt;h3 id="提示词"&gt;提示词&lt;/h3&gt;
-&lt;p&gt;我也不觉得需要好好思考提示词，codex 就要刷新额度了，多用点也无所谓：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;给这个21点游戏改成 ai agent dealer，让玩家能跟 dealer 对话，agent 通过理解玩家输入内容，调用方法来实现游戏流程，同时能与玩家聊天，对当前牌局评价。
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;## 细节
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 留出llm配置，我将会填写
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 将详细游戏规则写在agent的配置里，但留出调整语言风格等细节的可调性
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; agent调用工具时打印出调试用的提示信息
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 这是另一个项目直接复制的，可能需要修改git之类的配置
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;-&lt;/span&gt; 包含充分的中文注释便于理解
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="阅览"&gt;阅览&lt;/h3&gt;
-&lt;p&gt;调了调输入模型配置的那部分代码，也立马成功运行了，新增的 &lt;code&gt;agent.py&lt;/code&gt; 有 500 多行，硬生生把那些游戏原本的函数包装成了 agent 能用的工具。&lt;/p&gt;
-&lt;h2 id="运行"&gt;运行&lt;/h2&gt;
-&lt;p&gt;简单试运行，随手接的 qwen-plus，感觉模型有点蠢，跟它对话有点无聊，但由于工具设计完善，游戏能正常进行。&lt;/p&gt;
-&lt;p&gt;我顺手改了改提示词，能尽量显得沟通灵动一点，即便模型不聪明也能好玩一点：&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"&gt;&lt;code class="language-python" data-lang="python"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#66d9ef"&gt;def&lt;/span&gt; &lt;span style="color:#a6e22e"&gt;_build_system_prompt&lt;/span&gt;(self) &lt;span style="color:#f92672"&gt;-&amp;gt;&lt;/span&gt; str:
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;&amp;#34;&amp;#34;生成系统提示，集中可调内容。&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#66d9ef"&gt;return&lt;/span&gt; (
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;你是一只小猫，工作是 Blackjack 的庄家，负责和玩家聊天并通过工具驱动牌局。&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;回复友好，可给出局势点评以及与玩家闲聊；&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;f&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;语气设置：&lt;/span&gt;&lt;span style="color:#e6db74"&gt;{&lt;/span&gt;self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;config&lt;span style="color:#f92672"&gt;.&lt;/span&gt;tone&lt;span style="color:#e6db74"&gt;}&lt;/span&gt;&lt;span style="color:#e6db74"&gt;。&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;必须在需要游戏动作时调用相应工具（下注、要牌、停牌、加倍、分牌、保险、结算），&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;不要擅自假设结果。&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;当所有玩家手牌都已停牌或爆牌时，请调用 finish_round 完成结算。&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; &lt;span style="color:#e6db74"&gt;&amp;#34;以下是本桌的完整规则：&lt;/span&gt;&lt;span style="color:#ae81ff"&gt;\n&lt;/span&gt;&lt;span style="color:#e6db74"&gt;&amp;#34;&lt;/span&gt; &lt;span style="color:#f92672"&gt;+&lt;/span&gt; self&lt;span style="color:#f92672"&gt;.&lt;/span&gt;config&lt;span style="color:#f92672"&gt;.&lt;/span&gt;rules_text
-&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; )
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;我又发现有随时都可以加倍的问题，提给 codex 完成了修改，现在模型似乎还反应不过来当前是否可以加倍，但不该加倍的时候工具处理不了加倍指令了。&lt;/p&gt;</description></item><item><title>Agent 到底是啥？我自己造一个看看</title><link>https://junkai51.github.io/blog/posts/a0012_first-agent/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://junkai51.github.io/blog/posts/a0012_first-agent/</guid><description>&lt;p&gt;一边补充着理论知识，一边直接开干，管他什么 LangChain，LangGrahp，SDK，tool-using，我先用 python 手写个 agent loop 感受一下这玩意是怎么搞出来的，应该没多难吧。&lt;/p&gt;
+&lt;p&gt;codex 冷静解答：&lt;/p&gt;</description></item><item><title>Agent 到底是啥？我自己造一个看看</title><link>https://junkai51.github.io/blog/posts/a0012_first-agent/</link><pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate><guid>https://junkai51.github.io/blog/posts/a0012_first-agent/</guid><description>&lt;p&gt;一边补充着理论知识，一边直接开干，管他什么 LangChain，LangGrahp，SDK，tool-using，我先用 python 手写个 agent loop 感受一下这玩意是怎么搞出来的，应该没多难吧。&lt;/p&gt;
 &lt;h2 id="构建过程"&gt;构建过程&lt;/h2&gt;
 &lt;h3 id="1-设计工程结构"&gt;1. 设计工程结构&lt;/h3&gt;
 &lt;p&gt;连搜带问，大概有了个眉目，agent 的核心目标是&lt;/p&gt;
