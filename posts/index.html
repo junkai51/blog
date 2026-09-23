@@ -14,8 +14,7 @@ PyTorch PyTorch 已经将最复杂的数学部分自动化了，写的代码一�
 tensor 张量是 PyTorch 库中提供的基本计算单位
 多维数组 可在 GPU 中加速运算 自动梯度运算 神经网络参与计算的东西基本都是张量 输入、输出是张量 做完卷积、ReLU、BatchNorm 还是张量 参数甚至也可能是一种特殊的张量 统一容器来对一切（图片/音频/文本/loss/梯度……）进行机器学习运算 搭建 ResNet 残差网络 ResNet 特点
 为了解决 CNN 过深效果变差的问题 带捷径的 CNN 跳跃连接——跳过某些网络层的连接实现恒等映射，再与输出合并 让网络中的某些层不用直接学习完整的映射，而只学习“在输入基础上需要修改多少“ 数学理解
-假设某一层真正希望实现的映射叫： $$ H(x) $$ 普通神经网络会直接让卷积层去学： $$ F(x)\approx H(x) $$ 而 ResNet 把输出结构写成： $$ y=x+F(x) $$ 训练要得到最终结果 y ，于是如果理想答案是： $$ y=H(x) $$
-...</p></div><footer class=entry-footer><span title='2026-09-23 00:00:00 +0000 UTC'>September 23, 2026</span>&nbsp;·&nbsp;<span>Kai</span></footer><a class=entry-link aria-label="post link to 编程实现 ResNet 笔记" href=https://junkai51.github.io/blog/posts/a0023_resnet-notes/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>追了一圈各种小龙虾XXClaw，答案却藏在ChatGPT侧边栏：OpenAI Codex终于做好了“AI用电脑”这件事</h2></header><div class=entry-content><p>过去几个月，我像追连续剧一样追各种“xxClaw”“小龙虾”。
+假设某一层真正希望实现的映射叫： $$ H(x) $$ 普通神经网络会直接让卷积层去学： $$ F(x)\approx H(x) $$ 而 ResNet 把输出结构写成： $$ y=x+F(x) $$ 训练要得到最终结果 y ，于是如果理想答案是： ...</p></div><footer class=entry-footer><span title='2026-09-23 00:00:00 +0000 UTC'>September 23, 2026</span>&nbsp;·&nbsp;<span>Kai</span></footer><a class=entry-link aria-label="post link to 编程实现 ResNet 笔记" href=https://junkai51.github.io/blog/posts/a0023_resnet-notes/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>追了一圈各种小龙虾XXClaw，答案却藏在ChatGPT侧边栏：OpenAI Codex终于做好了“AI用电脑”这件事</h2></header><div class=entry-content><p>过去几个月，我像追连续剧一样追各种“xxClaw”“小龙虾”。
 OpenClaw、CoPaw、QClaw、QoderWork、WorkBuddy……名字一个比一个像能从桌面角落里爬出来帮我打工。最开始体验OpenClaw时最兴奋，那是过年那会儿，我把 OpenClaw 接上钉钉，然后用手机给它发消息，让它在实验机上整理文件、处理桌面任务。
 在当时，那个瞬间确实很有未来感。
 人在海滩上打扑克，电脑在城市的另一边，AI 在那里默默操作文件。以前说“AI 使用电脑”总觉得像 demo，直到我真的在手机上发一句话，回头看到实验机上的任务做完了，才觉得这东西离现实不远。

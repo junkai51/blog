@@ -37,21 +37,22 @@
 &lt;/ul&gt;
 &lt;p&gt;数学理解&lt;/p&gt;
 &lt;p&gt;假设某一层真正希望实现的映射叫：
+&lt;/p&gt;
 $$
 H(x)
-$$
+$$&lt;p&gt;
 普通神经网络会直接让卷积层去学：
+&lt;/p&gt;
 $$
 F(x)\approx H(x)
-$$
+$$&lt;p&gt;
 而 ResNet 把输出结构写成：
+&lt;/p&gt;
 $$
 y=x+F(x)
-$$
+$$&lt;p&gt;
 训练要得到最终结果 &lt;code&gt;y&lt;/code&gt; ，于是如果理想答案是：
-$$
-y=H(x)
-$$&lt;/p&gt;</description></item><item><title>OpenAI Agent SDK 学习笔记</title><link>https://junkai51.github.io/blog/posts/a0014_sdk-notes/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://junkai51.github.io/blog/posts/a0014_sdk-notes/</guid><description>&lt;p&gt;比起其他让人头疼的 OpenAI Developers API Docs，&lt;a href="https://openai.github.io/openai-agents-python/zh/"&gt;OpenAI Agent SDK&lt;/a&gt; 算是比读起来稍微轻松些的，甚至有简体中文。我决定读一读这些内容，虽然这像是词典一样的工具，读起来可能比较枯燥没有逻辑，但我作为一个“不识字”的人，读什么都是学。我将在这里以我自己舒服的方式记录一些我认为重要的内容以及思路梳理。&lt;/p&gt;
+&lt;/p&gt;</description></item><item><title>OpenAI Agent SDK 学习笔记</title><link>https://junkai51.github.io/blog/posts/a0014_sdk-notes/</link><pubDate>Tue, 24 Mar 2026 00:00:00 +0000</pubDate><guid>https://junkai51.github.io/blog/posts/a0014_sdk-notes/</guid><description>&lt;p&gt;比起其他让人头疼的 OpenAI Developers API Docs，&lt;a href="https://openai.github.io/openai-agents-python/zh/"&gt;OpenAI Agent SDK&lt;/a&gt; 算是比读起来稍微轻松些的，甚至有简体中文。我决定读一读这些内容，虽然这像是词典一样的工具，读起来可能比较枯燥没有逻辑，但我作为一个“不识字”的人，读什么都是学。我将在这里以我自己舒服的方式记录一些我认为重要的内容以及思路梳理。&lt;/p&gt;
 &lt;h1 id="智能体概览"&gt;智能体概览&lt;/h1&gt;
 &lt;blockquote&gt;
 &lt;p&gt;An agent is a large language model (LLM) configured with instructions, tools, and optional runtime behavior such as handoffs, guardrails, and structured outputs.&lt;/p&gt;

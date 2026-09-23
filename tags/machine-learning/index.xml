@@ -37,18 +37,19 @@
 &lt;/ul&gt;
 &lt;p&gt;数学理解&lt;/p&gt;
 &lt;p&gt;假设某一层真正希望实现的映射叫：
+&lt;/p&gt;
 $$
 H(x)
-$$
+$$&lt;p&gt;
 普通神经网络会直接让卷积层去学：
+&lt;/p&gt;
 $$
 F(x)\approx H(x)
-$$
+$$&lt;p&gt;
 而 ResNet 把输出结构写成：
+&lt;/p&gt;
 $$
 y=x+F(x)
-$$
+$$&lt;p&gt;
 训练要得到最终结果 &lt;code&gt;y&lt;/code&gt; ，于是如果理想答案是：
-$$
-y=H(x)
-$$&lt;/p&gt;</description></item></channel></rss>
+&lt;/p&gt;</description></item></channel></rss>
